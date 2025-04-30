@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
-from ..models.memo import MemoModel
+from ..models.memo import MemoResponse
 from ..main import prisma
 from prisma import errors as prisma_errors
 
 router = APIRouter()
 
-@router.get("/memoData")
-async def get_memo_lists(page: int = 1) -> list[MemoModel]:
+@router.get("/memo-data")
+async def get_memo_lists(page: int = 1) -> list[MemoResponse]:
     per_page = 6
     try:
         return await prisma.memo.find_many(
