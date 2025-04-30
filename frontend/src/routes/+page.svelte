@@ -4,21 +4,14 @@
 	let memoData = $state<{ title: string; content: string }[]>([]);
 	let page = $state(1);
 
-	async function fetchData() {
-		console.log('おした');
-		try {
-			const response = await fetch(`/api`);
-			if (response.ok) {
-				console.log(`/api`);
-				const data = await response.json();
-				console.log(data);
-			}
-		} catch (e) {
-			console.error('Failed to fetch data:', e);
-		}
-	}
+	let title = $state('');
+	let content = $state('');
+	let createSuccess = $state(false);
 
 	onMount(() => {
+		fetchMemoData();
+	});
+	$effect(() => {
 		fetchMemoData();
 	});
 
@@ -36,9 +29,23 @@
 		}
 	};
 
-	$effect(() => {
-		fetchMemoData();
-	});
+	async function createMemo() {
+		try {
+			const response = await fetch('/api/memoData', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ title, content })
+			});
+
+			if (!response.ok) throw new Error('失敗しました');
+
+			createSuccess = true;
+			title = '';
+			content = '';
+		} catch (e) {
+			console.error(e, 'エラーが発生しました');
+		}
+	}
 </script>
 
 <!-- <button on:click={fetchData}>Fetch Data</button> -->
@@ -54,8 +61,20 @@
 </div>
 
 <!-- メモ投稿フォーム -->
+<form onsubmit={createMemo} class="">
+	<input
+		type="string"
+		bind:value={title}
+		placeholder="メモのタイトル"
+		required
+		class="border px-2 py-1"
+	/>
+	<textarea bind:value={content} placeholder="本文" class="border px-2 py-1"></textarea>
+
+	<button type="submit">投稿</button>
+</form>
 
 <button onclick={() => (page = page - 1)} disabled={page === 1}>← 前へ</button>
 {#if memoData.length === 6}
-<button onclick={() => (page = page + 1)}>次へ →</button>
+	<button onclick={() => (page = page + 1)}>次へ →</button>
 {/if}
