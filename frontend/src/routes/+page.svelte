@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	let memoData: { title: string; content: string }[] = [];
+	let memoData = $state<{ title: string; content: string }[]>([]);
+	let page = $state(1);
 
 	async function fetchData() {
 		console.log('おした');
@@ -23,7 +24,7 @@
 
 	const fetchMemoData = async () => {
 		try {
-			const response = await fetch('/api/memoData');
+			const response = await fetch(`/api/memoData?page=${page}`);
 			if (response.ok) {
 				const data = await response.json();
 				memoData = data;
@@ -34,9 +35,13 @@
 			console.error('Error fetching memo data:', error);
 		}
 	};
+
+	$effect(() => {
+		fetchMemoData();
+	});
 </script>
 
-<button on:click={fetchData}>Fetch Data</button>
+<!-- <button on:click={fetchData}>Fetch Data</button> -->
 
 <!-- メモ一覧を表示 -->
 <div class="grid grid-cols-3 gap-4">
@@ -49,3 +54,6 @@
 </div>
 
 <!-- メモ投稿フォーム -->
+
+<button onclick={() => (page = page - 1)} disabled={page === 1}>← 前へ</button>
+<button onclick={() => (page = page + 1)}>次へ →</button>

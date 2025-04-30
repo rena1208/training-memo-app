@@ -7,7 +7,7 @@ router = APIRouter()
 
 @router.get("/memoData")
 async def get_memo_lists(page: int = 1) -> list[MemoModel]:
-    per_page = 10
+    per_page = 6
     try:
         return await prisma.memo.find_many(
             take=per_page,
