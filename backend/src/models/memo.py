@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 # レスポンス用のモデル
-class MemoModel(BaseModel):
+class MemoResponse(BaseModel):
     id: int
     title: str
     content: str
@@ -10,6 +10,6 @@ class MemoModel(BaseModel):
     updatedAt: datetime
 
 # リクエスト（post）用のモデル
-class MemoCreateModel(BaseModel):
+class MemoRequest(BaseModel):
     title: str
     content: str

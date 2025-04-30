@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from ..models.memo import MemoCreateModel, MemoModel
+from ..models.memo import MemoRequest, MemoResponse
 from ..prisma_client import prisma
 
 router = APIRouter()
 
-@router.post("/memoData", response_model=MemoModel)
-async def create_memo(memo: MemoCreateModel):
+@router.post("/memo-data", response_model=MemoResponse)
+async def create_memo(memo: MemoRequest):
     try:
         created = await prisma.memo.create(
             data={

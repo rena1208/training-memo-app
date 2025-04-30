@@ -24,7 +24,7 @@
 
 	const fetchMemoData = async () => {
 		try {
-			const response = await fetch(`/api/memoData?page=${page}`);
+			const response = await fetch(`/api/memo-data?page=${page}`);
 			if (response.ok) {
 				const data = await response.json();
 				memoData = data;
@@ -38,7 +38,7 @@
 
 	async function createMemo() {
 		try {
-			const response = await fetch('/api/memoData', {
+			const response = await fetch('/api/memo-data', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ title, content })
@@ -49,6 +49,7 @@
 			// createSuccess = true;
 			title = '';
 			content = '';
+			await fetchMemoData();
 		} catch (e) {
 			console.error(e, 'エラーが発生しました');
 		}
@@ -71,7 +72,7 @@
 
 		try {
 			console.log(editMemoId);
-			const response = await fetch(`/api/memoData/${editMemoId}`, {
+			const response = await fetch(`/api/memo-data/${editMemoId}`, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ title: editMemoTitle, content: editMemoContent })
@@ -90,6 +91,23 @@
 			console.error(e, 'エラーが発生しました');
 		}
 	};
+
+	// メモの削除
+	const deleteMemo = async (id: number) => {
+		if (!confirm('本当に削除しますか？')) return;
+		try {
+			const response = await fetch(`/api/memo-data/${id}`, {
+				method: 'DELETE'
+			});
+			if (!response.ok) {
+				throw new Error('削除に失敗しました');
+			}
+
+			await fetchMemoData();
+		} catch (e) {
+			console.error(e, 'エラーが発生しました');
+		}
+	};
 </script>
 
 <!-- メモ一覧を表示 -->
@@ -100,6 +118,7 @@
 			<h2>{memo.title}</h2>
 			<p>{memo.content}</p>
 			<button class="" onclick={() => startEditingMemo(memo.id)}>編集</button>
+			<button class="" onclick={() => deleteMemo(memo.id)}>削除</button>
 		</div>
 	{/each}
 </div>

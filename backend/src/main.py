@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from .prisma_client import prisma
-from .memo import list, create, update
+from .memo import list, create, update, delete
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -14,6 +14,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(list.router, prefix="/api")
 app.include_router(create.router, prefix="/api")
 app.include_router(update.router, prefix="/api")
+app.include_router(delete.router, prefix="/api")
 
 @app.get("/api")
 async def root():

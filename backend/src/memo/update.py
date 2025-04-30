@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from ..models.memo import MemoModel, MemoCreateModel
+from ..models.memo import MemoResponse, MemoRequest
 from ..prisma_client import prisma
 
 router = APIRouter()
 
-@router.patch("/memoData/{id}", response_model=MemoModel)
-async def update_memo(id: int, memo: MemoCreateModel):
+@router.patch("/memo-data/{id}", response_model=MemoResponse)
+async def update_memo(id: int, memo: MemoRequest):
     try:
         existing = await prisma.memo.find_unique(where={"id": id})
         if not existing:
