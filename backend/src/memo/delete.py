@@ -6,11 +6,15 @@ router = APIRouter()
 
 @router.delete("memo/{id}", response_model=MemoResponse)
 async def delete_todo(id: int):
-    existing = await prisma.todo.find_unique(where={"id": id})
-    if not existing:
-        raise HTTPException(status_code=404, detail="todoが見つかりません")
+    try:
+        existing = await prisma.memo.find_unique(where={"id": id})
+        if not existing:
+            raise HTTPException(status_code=404, detail="memoが見つかりません")
 
-    deleted = await prisma.todo.delete(
-        where={"id": id}
-    )
-    return deleted
+        deleted = await prisma.memo.delete(
+            where={"id": id}
+        )
+        return deleted
+    
+    except Exception:
+        raise HTTPException(status_code=500, detail="Memoの削除に失敗しました")
