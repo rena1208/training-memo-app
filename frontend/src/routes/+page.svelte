@@ -56,4 +56,6 @@
 <!-- メモ投稿フォーム -->
 
 <button onclick={() => (page = page - 1)} disabled={page === 1}>← 前へ</button>
+{#if memoData.length === 6}
 <button onclick={() => (page = page + 1)}>次へ →</button>
+{/if}
