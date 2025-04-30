@@ -4,7 +4,7 @@ from ..prisma_client import prisma
 
 router = APIRouter()
 
-@router.delete("memo/{id}", response_model=MemoResponse)
+@router.delete("/memo-data/{id}", response_model=MemoResponse)
 async def delete_todo(id: int):
     try:
         existing = await prisma.memo.find_unique(where={"id": id})
