@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Todo {
+model Memo {
   id        Int      @id @default(autoincrement())
   title     String
   content   String
