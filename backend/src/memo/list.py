@@ -1,0 +1,18 @@
+from fastapi import APIRouter, HTTPException
+from ..models.memo import MemoModel
+from ..main import prisma
+from prisma import errors as prisma_errors
+
+router = APIRouter()
+
+@router.get("/memoData")
+async def get_memo_lists(page: int = 1) -> list[MemoModel]:
+    per_page = 10
+    try:
+        return await prisma.memo.find_many(
+            take=per_page,
+            skip=(page - 1) * per_page
+        )
+    except prisma_errors.PrismaError as e:
+        print(e)
+        raise HTTPException(status_code=400, detail="fetch failed")

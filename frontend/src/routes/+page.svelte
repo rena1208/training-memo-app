@@ -1,12 +1,14 @@
-<script>
+<script lang="ts">
+	import { onMount } from 'svelte';
+
+	let memoData: { title: string; content: string }[] = [];
+
 	async function fetchData() {
 		console.log('おした');
-		// const url = 'http://127.0.0.1:8000/api'; // FastAPI エンドポイント
 		try {
 			const response = await fetch(`/api`);
 			if (response.ok) {
 				console.log(`/api`);
-				// throw new Error(`HTTP error! status: ${response.status}`);
 				const data = await response.json();
 				console.log(data);
 			}
@@ -14,5 +16,36 @@
 			console.error('Failed to fetch data:', e);
 		}
 	}
+
+	onMount(() => {
+		fetchMemoData();
+	});
+
+	const fetchMemoData = async () => {
+		try {
+			const response = await fetch('/api/memoData');
+			if (response.ok) {
+				const data = await response.json();
+				memoData = data;
+			} else {
+				console.error('Failed to fetch memo data:', response.statusText);
+			}
+		} catch (error) {
+			console.error('Error fetching memo data:', error);
+		}
+	};
 </script>
+
 <button on:click={fetchData}>Fetch Data</button>
+
+<!-- メモ一覧を表示 -->
+<div class="grid grid-cols-3 gap-4">
+	{#each memoData as memo}
+		<div class="flex-col">
+			<h2>{memo.title}</h2>
+			<p>{memo.content}</p>
+		</div>
+	{/each}
+</div>
+
+<!-- メモ投稿フォーム -->
