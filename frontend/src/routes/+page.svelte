@@ -111,10 +111,10 @@
 </script>
 
 <!-- メモ一覧を表示 -->
-<h1>メモ一覧</h1>
-<div class="grid grid-cols-3 gap-4">
+<h1 class="my-4 text-center text-4xl">メモ一覧</h1>
+<div class="mx-auto my-8 grid w-[80%] grid-cols-3 gap-4">
 	{#each memoData as memo}
-		<div class="flex-col">
+		<div class="my-auto flex-col p-4">
 			<h2>{memo.title}</h2>
 			<p>{memo.content}</p>
 			<button class="" onclick={() => startEditingMemo(memo.id)}>編集</button>
@@ -124,29 +124,36 @@
 </div>
 
 <!-- メモ投稿フォーム -->
-<h1>メモの追加</h1>
+<h1 class="my-4 text-center text-4xl">メモの追加</h1>
 {#if editMode}
-	<form onsubmit={submitUpdateMemo} class="">
-		<input type="string" bind:value={editMemoTitle} required class="border px-2 py-1" />
-		<textarea bind:value={editMemoContent} class="border px-2 py-1"></textarea>
+	<form onsubmit={submitUpdateMemo} class="mx-auto my-6 max-w-md">
+		<div class="flex flex-col gap-4">
+			<input type="string" bind:value={editMemoTitle} required class="border px-2 py-1" />
+			<textarea bind:value={editMemoContent} class="border px-2 py-1"></textarea>
 
-		<button type="submit">投稿</button>
+			<button type="submit">投稿</button>
+		</div>
 	</form>
 {:else}
-	<form onsubmit={createMemo} class="">
-		<input
-			type="string"
-			bind:value={title}
-			placeholder="メモのタイトル"
-			required
-			class="border px-2 py-1"
-		/>
-		<textarea bind:value={content} placeholder="本文" class="border px-2 py-1"></textarea>
+	<form onsubmit={createMemo} class="mx-auto my-6 max-w-md">
+		<div class="flex flex-col gap-4">
+			<input
+				type="string"
+				bind:value={title}
+				placeholder="メモのタイトル"
+				required
+				class="border px-2 py-1"
+			/>
+			<textarea bind:value={content} placeholder="本文" class="border px-2 py-1"></textarea>
 
-		<button type="submit">投稿</button>
+			<button type="submit">投稿</button>
+		</div>
 	</form>
 {/if}
-<button onclick={() => (page = page - 1)} disabled={page === 1}>← 前へ</button>
-{#if memoData.length === 6}
-	<button onclick={() => (page = page + 1)}>次へ →</button>
-{/if}
+
+<div class="w-full text-center">
+	<button onclick={() => (page = page - 1)} disabled={page === 1}>← 前へ</button>
+	{#if memoData.length === 6}
+		<button onclick={() => (page = page + 1)}>次へ →</button>
+	{/if}
+</div>
